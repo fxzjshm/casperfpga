@@ -154,7 +154,7 @@ class SnapAdc(object):
         self._retry_wait = kwargs.get('retry_wait',1)
 
         if initialize:
-            self.init(sample_rate=self.sample_rate, num_channel=self.num_channel)
+            self.init(sample_rate=self.sample_rate, numChannel=self.num_channel)
 
     def set_gain(self, gain):
         """
