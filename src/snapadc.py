@@ -962,8 +962,9 @@ class SnapAdc(object):
             logger.error('Frame clock NOT aligned.\n{0}'.format(str(errs)))
             return False
 
-    def rampTest(self, nchecks=300, retry=False):
-        chips = self.adcList
+    def rampTest(self, chips=None, nchecks=300, retry=False):
+        if chips is None:
+            chips = self.adcList
         self.logger.debug('Ramp test on ADCs: %s' % str(chips))
         failed_chips = {}
         self.setDemux(numChannel=1)
@@ -972,7 +973,7 @@ class SnapAdc(object):
         self.adc.test("en_ramp")
         for cnt in range(nchecks):
             self.snapshot()
-            for chip,d in self.readRAM(signed=False).items():
+            for chip,d in self.readRAM(chips, signed=False).items():
                 ans = (predicted + d[0,0]) % 256
                 failed_lanes = np.sum(d != ans, axis=0)
                 if np.any(failed_lanes) > 0:
