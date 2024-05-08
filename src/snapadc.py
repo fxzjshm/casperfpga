@@ -1020,7 +1020,7 @@ class SnapAdc(object):
     def from_device_info(cls, parent, device_name, device_info, initialize=False, **kwargs):
         """
         Process device info and the memory map to get all the necessary info
-        and return a SKARAB ADC instance.
+        and return a ADC instance.
         :param parent: The parent device, normally a casperfpga instance
         :param device_name:
         :param device_info:
@@ -1029,4 +1029,8 @@ class SnapAdc(object):
         :param kwargs:
         :return:
         """
-        return cls(parent, device_name, device_info, initialize, **kwargs)
+        host = parent
+        #return cls(parent, device_name, device_info, initialize, **kwargs)
+        # XXX should device_info be passed as kwargs to cls? Would require renaming
+        # some parameters, so am not for now.
+        return cls(host)
