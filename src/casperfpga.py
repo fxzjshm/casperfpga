@@ -10,7 +10,6 @@ except(ImportError):
     # starting in Python 3.10, Callable is in abc
     from collections.abc import Callable
 
-
 from . import register
 from . import sbram
 from . import snap
