@@ -982,8 +982,9 @@ class SnapAdc(object):
             logger.error('Frame clock NOT aligned.\n{0}'.format(str(errs)))
             return False
 
-    def rampTest(self, nchecks=300, retry=False):
-        chips = self.adcList
+    def rampTest(self, chips=None, nchecks=300, retry=False):
+        if chips is None:
+            chips = self.adcList
         self.logger.debug('Ramp test on ADCs: %s' % str(chips))
         failed_chips = {}
         self.setDemux(numChannel=1)
@@ -992,7 +993,7 @@ class SnapAdc(object):
         self.adc.test("en_ramp")
         for cnt in range(nchecks):
             self.snapshot()
-            for chip,d in self.readRAM(signed=False).items():
+            for chip,d in self.readRAM(chips, signed=False).items():
                 ans = (predicted + d[0,0]) % 256
                 failed_lanes = np.sum(d != ans, axis=0)
                 if np.any(failed_lanes) > 0:
@@ -1040,7 +1041,7 @@ class SnapAdc(object):
     def from_device_info(cls, parent, device_name, device_info, initialize=False, **kwargs):
         """
         Process device info and the memory map to get all the necessary info
-        and return a SKARAB ADC instance.
+        and return a ADC instance.
         :param parent: The parent device, normally a casperfpga instance
         :param device_name:
         :param device_info:
@@ -1049,4 +1050,8 @@ class SnapAdc(object):
         :param kwargs:
         :return:
         """
-        return cls(parent, device_name, device_info, initialize, **kwargs)
+        host = parent
+        #return cls(parent, device_name, device_info, initialize, **kwargs)
+        # XXX should device_info be passed as kwargs to cls? Would require renaming
+        # some parameters, so am not for now.
+        return cls(host)

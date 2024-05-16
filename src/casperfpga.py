@@ -4,7 +4,11 @@ import time
 import socket
 from time import strptime
 import string
-from collections.abc import Callable
+try:
+    from collections import Callable
+except(ImportError):
+    # starting in Python 3.10, Callable is in abc
+    from collections.abc import Callable
 
 from . import register
 from . import sbram
